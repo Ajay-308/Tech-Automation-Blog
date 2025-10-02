@@ -1,0 +1,168 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -384,
+        -208
+      ],
+      "id": "f8b25ec9-8462-4ad2-9267-7d5a73748747",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "const keywords = [\"system design\", \"ai\", \"backend\", \"architecture\"];\n\nconst isEnglish = (text) => /^[\\x00-\\x7F]*$/.test(text);\nreturn items\n  .filter(item => {\n    const text = ((item.json.title || \"\") + \" \" + (item.json.contentSnippet || \"\")).toLowerCase();\n    return keywords.some(k => text.includes(k));\n  })\n  .filter(item => {\n    const text = (item.json.title || \"\") + \" \" + (item.json.contentSnippet || \"\");\n    return isEnglish(text);\n  })\n  .sort((a, b) => new Date(b.json.isoDate) - new Date(a.json.isoDate))\n  .slice(0, 2);\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -48,
+        -432
+      ],
+      "id": "ae9d41c7-4348-4758-b079-0c8bf83e6a78",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "sendTo": "gojoxsukuna3@gmail.com",
+        "subject": "=New Tech Blog: {{ json.title }}",
+        "message": "=<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <style>\n        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #f8f9fa; }\n        .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; }\n        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center; }\n        .header h1 { color: white; margin: 0; font-size: 24px; font-weight: 600; }\n        .content { padding: 30px; }\n        .article-title { color: #2c3e50; font-size: 20px; font-weight: 600; margin: 0 0 20px 0; line-height: 1.4; }\n        .read-link { display: inline-block; background: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 500; margin-bottom: 25px; transition: background 0.3s; }\n        .read-link:hover { background: #5a67d8; }\n        .summary-section { background: #f8f9ff; border-left: 4px solid #667eea; padding: 20px; border-radius: 0 8px 8px 0; margin: 20px 0; }\n        .summary-title { color: #4a5568; font-size: 16px; font-weight: 600; margin: 0 0 15px 0; }\n        .summary-text { color: #2d3748; line-height: 1.6; font-size: 15px; margin: 0; }\n        .footer { background: #f7fafc; padding: 20px; text-align: center; border-top: 1px solid #e2e8f0; }\n        .footer-text { color: #718096; font-size: 12px; margin: 0; }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <div class=\"header\">\n            <h1>📚 Tech Blog Update</h1>\n        </div>\n        <div class=\"content\">\n            <h2 class=\"article-title\">{{$json.title}}</h2>\n            <a href=\"{{$json.link}}\" class=\"read-link\">🔗 Read Full Article</a>\n            <div class=\"summary-section\">\n                <h3 class=\"summary-title\">📝 Article Summary</h3>\n                <div class=\"summary-text\">{{$json.contentSnippet}}</div>\n            </div>\n        </div>\n        <div class=\"footer\">\n            <p class=\"footer-text\">Automated by n8n workflow • Stay updated with the latest tech insights</p>\n        </div>\n    </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        304,
+        -208
+      ],
+      "id": "a867274c-cc94-483d-a490-1de5725e0f6d",
+      "name": "Send a message",
+      "webhookId": "a03ad992-347a-406a-86ed-0c9df04995b2",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Ced0zPBJpjfSHduq",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://medium.com/feed/tag/ai",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -864,
+        -208
+      ],
+      "id": "29b3f04e-0196-470a-b1cf-3b77e85108b9",
+      "name": "RSS Read"
+    },
+    {
+      "parameters": {
+        "url": "https://dev.to/feed/tag/systemdesign",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -640,
+        -464
+      ],
+      "id": "5e723414-14cf-43b1-941e-08a14e6089d8",
+      "name": "RSS Read1"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -976,
+        -480
+      ],
+      "id": "5c22d689-936f-4a7c-b103-3936fa4182e8",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read": {
+      "main": [
+        [
+          {
+            "node": "RSS Read1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "RSS Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 120
+  },
+  "versionId": "d556d1e7-5525-4378-9cbe-d7d5c13e2dd8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4d57907384e674be5923005bf41377ad2fc7813b5b06889bbe4c9d540896fe59"
+  },
+  "id": "oe28Px4D0Meiy2ks",
+  "tags": []
+}
