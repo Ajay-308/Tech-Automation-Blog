@@ -33,6 +33,6 @@ It scrapes articles from RSS feeds, filters them using keywords + language detec
 3. Activate the workflow — done ✅.
 
 ## 👨‍💻 Author
-Ajay Kumar  
+Ajay Singh 
 - [GitHub](https://github.com/Ajay-308)  
 - [LinkedIn](https://linkedin.com/in/ajay-b94a13233)  
